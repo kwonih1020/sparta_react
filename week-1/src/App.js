@@ -4,6 +4,7 @@ import logo from './logo.svg';
 // import [컴포넌트 명] from [컴포넌트가 있는 파일경로];
 import BucketList from './BucketList';
 import './style.css';
+import './sscc_ex.scss';
 
 // 클래스형 컴포넌트는 이렇게 생겼습니다!
 class App extends React.Component {
