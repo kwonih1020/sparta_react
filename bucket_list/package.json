@@ -1,5 +1,5 @@
 {
-  "name": "week-1",
+  "name": "bucket_list",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -11,8 +11,10 @@
     "open-color": "^1.7.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
     "sass-loader": "^10.1.0",
+    "styled-components": "^5.2.1",
     "web-vitals": "^0.2.4"
   },
   "scripts": {
