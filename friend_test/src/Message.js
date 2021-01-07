@@ -1,12 +1,22 @@
 import React from "react";
 import img from "./scc_img01.png";
 import { useDispatch, useSelector } from "react-redux";
-import { addUserName } from "./redux/modules/rank";
+import {addRank} from "./redux/modules/rank";
 
-const Start = (props) => {
+const Message = (props) => {
   const dispatch = useDispatch();
   const name = useSelector((state) => state.quiz.name);
+  const answers = useSelector((state) => state.quiz.answers);
+  const user_name = useSelector((state)=>state.rank.user_name);
+
   const input_text = React.useRef(null);
+  // 정답만 걸러내기
+  let correct = answers.filter((answer) => {
+    return answer;
+  });
+
+  // 점수 계산하기
+  let score = (correct.length / answers.length) * 100;
 
   // 컬러셋 참고: https://www.shutterstock.com/ko/blog/pastel-color-palettes-rococo-trend/
   return (
@@ -41,7 +51,6 @@ const Start = (props) => {
           style={{ width: "80%", margin: "-70px 16px 48px 16px" }}
         />
         <h1 style={{ fontSize: "1.5em", margin: "0px", lineHeight: "1.4" }}>
-          나는{" "}
           <span
             style={{
               backgroundColor: "#fef5d4",
@@ -51,10 +60,10 @@ const Start = (props) => {
           >
             {name}
           </span>
-          에 대해 얼마나 알고 있을까?
+          에게 한마디
         </h1>
         <input
-          ref={input_text}
+        ref={input_text}
           type="text"
           style={{
             padding: "10px",
@@ -62,16 +71,23 @@ const Start = (props) => {
             border: "1px solid #dadafc",
             borderRadius: "30px",
             width: "100%",
-            // backgroundColor: "#dadafc55",
           }}
-          placeholder="내 이름"
+          placeholder="한 마디 적기"
         />
         <button
           onClick={() => {
-            // 이름 저장
-            dispatch(addUserName(input_text.current.value));
-            // 페이지 이동
-            props.history.push("/quiz");
+            
+            let rank_info = {
+                score: parseInt(score),
+                name: user_name,
+                message: input_text.current.value,
+                current: true,
+            };
+            // 랭킹 정보 넣기
+            dispatch(addRank(rank_info));
+            // 주소 이동
+            props.history.push('/ranking');
+
           }}
           style={{
             padding: "8px 24px",
@@ -80,11 +96,11 @@ const Start = (props) => {
             border: "#dadafc",
           }}
         >
-          시작하기
+          한마디하고 랭킹 보러 가기
         </button>
       </div>
     </div>
   );
 };
 
-export default Start;
+export default Message;

@@ -1,21 +1,34 @@
 import React from "react";
 import styled from "styled-components";
-import img from "./scc_img01.png";
-import TinderCard from "react-tinder-card";
+import Score from "./Score";
+import SwipeItem from "./SwipeItem";
 
-//
+
+import { useSelector, useDispatch } from "react-redux";
+import {addAnswer} from "./redux/modules/quiz";
+
 const Quiz = (props) => {
-  console.log(props);
-  // state로 관리하자!
-  const [num, setNum] = React.useState(0);
+  const dispatch = useDispatch();
+  const answers = useSelector((state) => state.quiz.answers);
+  const quiz = useSelector((state) => state.quiz.quiz);
+  
+  const num = answers.length;
 
   const onSwipe = (direction) => {
-    console.log("You swiped: " + direction);
-    setNum(num + 1);
-  };
+    let _answer = direction === "left"? "O" : "X";
 
-  if (num > 10) {
-    return <div>퀴즈 끝!</div>;
+    if(_answer === quiz[num].answer){
+      // 정답일 경우,
+      dispatch(addAnswer(true));
+    }else{
+      // 오답일 경우,
+      dispatch(addAnswer(false));
+    }
+  }
+
+  if (num > quiz.length -1) {
+    return <Score {...props}/>;
+    // return <div>퀴즈 끝!</div>;
   }
 
   return (
@@ -23,7 +36,7 @@ const Quiz = (props) => {
       <p>
         <span>{num + 1}번 문제</span>
       </p>
-      {props.list.map((l, idx) => {
+      {quiz.map((l, idx) => {
         if (num === idx) {
           return <Question key={idx}>{l.question}</Question>;
         }
@@ -34,20 +47,9 @@ const Quiz = (props) => {
         <Answer>{" X"}</Answer>
       </AnswerZone>
 
-      {props.list.map((l, idx) => {
+      {quiz.map((l, idx) => {
         if (idx === num) {
-          return (
-            <DragItem key={idx}>
-              <TinderCard
-                onSwipe={onSwipe}
-                onCardLeftScreen={onSwipe}
-                onCardRightScreen={onSwipe}
-                preventSwipe={["up", "down"]}
-              >
-                <img src={img} />
-              </TinderCard>
-            </DragItem>
-          );
+          return <SwipeItem key={idx} onSwipe={onSwipe}/>;
         }
       })}
     </QuizContainer>
@@ -55,6 +57,8 @@ const Quiz = (props) => {
 };
 
 const QuizContainer = styled.div`
+  margin-top: 16px;
+  width: 100%;
   & > p > span {
     padding: 8px 16px;
     background-color: #fef5d4;
@@ -102,5 +106,4 @@ const DragItem = styled.div`
     max-width: 150px;
   }
 `;
-
 export default Quiz;
