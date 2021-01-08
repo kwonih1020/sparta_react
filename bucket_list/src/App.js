@@ -47,7 +47,59 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-  }
+    // bucket에서 buckets로 이름 바꾸기! 그리고 대시보드를 확인해보세요!
+    const bucket = firestore.collection("bucket2");
+    bucket.doc("bucket_item").set({ text: "수영 배우기", compeleted: false });
+    
+    
+    // console.log(firestore);
+    // const bucket = firestore.collection('bucket');
+    // // 하나만 확인하기
+    // bucket
+    //   .doc("bucket_item1")
+    //   .get()
+    //   .then((doc) => {
+    //     // .exists를 써서 데이터가 있는 지 없는 지 확인!
+    //     if(doc.exists){
+    //       // 데이터를 콘솔에 찍어보자!
+    //       console.log(doc.data());
+    //     }
+    //   });
+    // //전체 확인하기
+		// bucket
+    //   .get()
+    //   .then((docs) => {
+    //     let bucket_data = [];
+    //     docs.forEach((doc) => {
+    //       // 도큐먼트 객체를 확인해보자!
+    //       console.log(doc);
+    //       // 도큐먼트 데이터 가져오기
+    //       console.log(doc.data());
+    //       // 도큐먼트 id 가져오기
+    //       console.log(doc.id);
+
+    //       if (doc.exists) {
+    //         bucket_data = [...bucket_data, { id: doc.id, ...doc.data() }];
+    //       }
+    //     });
+
+    //     console.log(bucket_data);
+    //   });
+
+    // 데이터 추가하기
+    // bucket.add({text: "찬양 배우기", compeleted: false}).then((docRef) => {
+    //   console.log(docRef);
+    //   console.log(docRef.id);
+    // });
+
+    // 데이터 수정하기
+    // bucket.doc("bucket_item1").update({text: "수영 배우기2"});
+
+    // 데이터 삭제하기
+    // bucket.doc("bucket_item2").delete().then(docRef => {
+    //   console.log("Deleted")
+    // });
+}
 
   addBucketList = () => {
     const new_item = { text: this.text.current.value, compeleted: false};
