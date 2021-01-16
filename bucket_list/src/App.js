@@ -12,7 +12,7 @@ import NotFound from "./NotFound";
 // 리덕스 스토어와 연결하기 위해 connect라는 친구를 호출할게요!
 import {connect} from 'react-redux';
 // 리덕스 모듈에서 (bucket 모듈에서) 액션 생성 함수 두개를 가져올게요!
-import {loadBucket, createBucket} from './redux/modules/bucket';
+import {loadBucket, createBucket, loadBucketFB, addBucketFB} from './redux/modules/bucket';
 import Progress from "./Progress";
 
 // firestore 가져오기
@@ -26,11 +26,11 @@ const mapStateTopProps = (state) => ({
 // 이 함수는 값을 변화시키기 위한 액션 생성 함수를 props로 받아오기 위한 함수예요.
 const mapDispatchToProps = (dispatch) => ({
   load: () => {
-    dispatch(loadBucket());
+    dispatch(loadBucketFB());
   },
   create: (new_item) => {
     console.log(new_item);
-    dispatch(createBucket(new_item));
+    dispatch(addBucketFB(new_item));
   }
 });
 
@@ -47,11 +47,14 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+
+    this.props.load();
     // bucket에서 buckets로 이름 바꾸기! 그리고 대시보드를 확인해보세요!
-    const bucket = firestore.collection("bucket2");
-    bucket.doc("bucket_item").set({ text: "수영 배우기", compeleted: false });
+    // const bucket = firestore.collection("bucket2");
+    // bucket.doc("bucket_item").set({ text: "수영 배우기", compeleted: false });
     
     
+
     // console.log(firestore);
     // const bucket = firestore.collection('bucket');
     // // 하나만 확인하기
