@@ -1,13 +1,13 @@
 import React from "react";
 import img from "./scc_img01.png";
 import { useDispatch, useSelector } from "react-redux";
-import {addRank} from "./redux/modules/rank";
+import { addRank, addRankFB } from "./redux/modules/rank";
 
 const Message = (props) => {
   const dispatch = useDispatch();
   const name = useSelector((state) => state.quiz.name);
   const answers = useSelector((state) => state.quiz.answers);
-  const user_name = useSelector((state)=>state.rank.user_name);
+  const user_name = useSelector((state) => state.rank.user_name);
 
   const input_text = React.useRef(null);
   // 정답만 걸러내기
@@ -63,7 +63,7 @@ const Message = (props) => {
           에게 한마디
         </h1>
         <input
-        ref={input_text}
+          ref={input_text}
           type="text"
           style={{
             padding: "10px",
@@ -76,18 +76,22 @@ const Message = (props) => {
         />
         <button
           onClick={() => {
-            
             let rank_info = {
-                score: parseInt(score),
-                name: user_name,
-                message: input_text.current.value,
-                current: true,
+              score: parseInt(score),
+              name: user_name,
+              message: input_text.current.value,
+              current: true,
             };
             // 랭킹 정보 넣기
-            dispatch(addRank(rank_info));
-            // 주소 이동
-            props.history.push('/ranking');
+            // dispatch(addRank(rank_info));
 
+            dispatch(addRankFB(rank_info));
+            // 주소 이동
+            // 시간 차를 두고 이동 시켜줘요.
+            window.setTimeout(() => {
+              props.history.push("/ranking");
+            }, 1000);
+            
           }}
           style={{
             padding: "8px 24px",
