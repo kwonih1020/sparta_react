@@ -7,9 +7,12 @@ const LOAD = "bucket/LOAD";
 const CREATE = "bucket/CREATE";
 const DELETE = "bucket/DELETE";
 const UPDATE = "bucket/UPDATE";
+// is loaded
+const LOADED = "bucket/LOADED";
 
 const initialState = {
   //   list: ["영화관 가기", "매일 책읽기", "수영 배우기"],
+  is_loaded: false,
   list: [
     { text: "영화관 가기", completed: false },
     { text: "매일 책읽기", completed: false },
@@ -33,6 +36,11 @@ export const deleteBucket = (bucket) => {
 export const updateBucket = (bucket) => {
   return { type: UPDATE, bucket };
 };
+
+// loaded를 받아서 is_loaded 값을 true/false로 바꿔줄 액션 생성 함수입니다.
+export const isLoaded = (loaded) => {
+  return {type: LOADED, loaded}
+}
 
 // 파이어베이스랑 통신하는 부분
 export const loadBucketFB = () => {
@@ -64,9 +72,13 @@ export const loadBucketFB = () => {
 // 파이어베이스랑 통신하는 부분
 export const addBucketFB = (bucket) => {
   return function (dispatch) {
+
+    // 요청 보내기 전에 스피너를 보여줍시다
+    dispatch(isLoaded(false));
+
     console.log(bucket);
     // 생성할 데이터를 미리 만들게요!
-    let bucket_data = { text: bucket.text, completed: false };
+    let bucket_data = { text: bucket, completed: false };
 
     // add()에 데이터를 넘겨줍시다!
     bucket_db
@@ -79,11 +91,14 @@ export const addBucketFB = (bucket) => {
 
         // 성공했을 때는? 액션 디스패치!
         dispatch(createBucket(bucket_data));
+        // 스피너도 다시 없애줘여죠!
+        dispatch(isLoaded(true));
       })
       .catch((err) => {
         // 여긴 에러가 났을 때 들어오는 구간입니다!
         console.log(err);
         window.alert('오류가 났네요! 나중에 다시 시도해주세요!');
+        dispatch(isLoaded(true));
       });
   };
 };
@@ -141,10 +156,10 @@ export default function reducer(state = initialState, action) {
   switch (action.type) {
     // do reducer stuff
     case "bucket/LOAD": {
-      if(action.bucket.length >0){
-        return { list: action.bucket };
+      if (action.bucket.length > 0) {
+        return { list: action.bucket, is_loaded: true };
       }
-
+      
       return state;
     }
 
@@ -163,7 +178,7 @@ export default function reducer(state = initialState, action) {
           return l;
         }
       });
-      return { list: bucket_list };
+      return { ...state, list: bucket_list };
     }
 
     case "bucket/UPDATE": {
@@ -176,7 +191,11 @@ export default function reducer(state = initialState, action) {
         return l;
       });
 
-      return { list: bucket_list };
+      return { ...state, list: bucket_list };
+    }
+
+    case "bucket/LOADED": {
+      return {...state, is_loaded: action.loaded};
     }
 
     default:
